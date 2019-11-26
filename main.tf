@@ -1,17 +1,25 @@
-  provider "aws" {
+    provider "aws" {
+    version = "~> 2.0"
     region                  = "eu-west-1"
-    shared_credentials_file = "/Users/tf_user/.aws/creds"
-    profile                 = "customprofile"
+    shared_credentials_file = "/home/amila/.aws/doex.cred"
+    profile                 = "amila"
   }
 
-    module "vpc" {
-    source  = "terraform-aws-modules/vpc/aws"
-    version = "2.18.0"
-    # insert the 8 required variables here
-    azs               = ["eu-west-1a", "eu-west-1b"]
-    #nat_public_ips    = "1.1.1.1"
-    #private_subnets   = ""
-    #public_subnets    = ""
-    #vpc_cidr_block    = "10.0.0.0/16"
-    #vpc_id            = ""
-  }
+      module "vpc" {
+        source = "terraform-aws-modules/vpc/aws"
+
+        name = "my-vpc"
+        cidr = "10.0.0.0/16"
+
+        azs             = ["eu-west-1a", "eu-west-1b", "eu-west-1c"]
+        private_subnets = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]
+        public_subnets  = ["10.0.101.0/24", "10.0.102.0/24", "10.0.103.0/24"]
+
+        enable_nat_gateway = false
+        enable_vpn_gateway = false
+
+        tags = {
+        Terraform = "true"
+        Environment = "dev"
+        }
+    }
